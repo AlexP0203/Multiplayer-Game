@@ -13,9 +13,8 @@ public class CharacterControls : MonoBehaviour {
 	public float jumpHeight = 2.0f;
 	public float maxFallSpeed = 20.0f;
 	public float rotateSpeed = 25f; //Speed the player rotate
-	private Vector3 moveDir;
 	public GameObject cam;
-	private Rigidbody rb;
+	
 
 	private float distToGround;
 
@@ -24,11 +23,24 @@ public class CharacterControls : MonoBehaviour {
 	private bool wasStuned = false; //If player was stunned before get stunned another time
 	private float pushForce;
 	private Vector3 pushDir;
+    private Rigidbody rb;
+    private Vector3 moveDir;
+	private Vector2 playerInput = new Vector2(1,2);
 
-	public Vector3 checkPoint;
+    public Vector3 checkPoint;
 	private bool slide = false;
 
-	void  Start (){
+    private void OnEnable()
+    {
+		IA_PlayerControls.playerControls.Player.Move.Enable();
+    }
+
+    private void OnDisable()
+    {
+        IA_PlayerControls.playerControls.Player.Move.Disable();
+    }
+
+    void  Start (){
 		// get the distance to ground
 		distToGround = GetComponent<Collider>().bounds.extents.y;
 	}
@@ -46,8 +58,9 @@ public class CharacterControls : MonoBehaviour {
 		Cursor.visible = false;
 	}
 	
-	void FixedUpdate () {
-		if (canMove)
+	void FixedUpdate ()
+	{ 
+        if (canMove)
 		{
 			if (moveDir.x != 0 || moveDir.z != 0)
 			{
@@ -122,29 +135,6 @@ public class CharacterControls : MonoBehaviour {
 		rb.AddForce(new Vector3(0, -gravity * GetComponent<Rigidbody>().mass, 0));
 	}
 
-	private void Update()
-	{
-		float h = Input.GetAxis("Horizontal");
-		float v = Input.GetAxis("Vertical");
-
-		Vector3 v2 = v * cam.transform.forward; //Vertical axis to which I want to move with respect to the camera
-		Vector3 h2 = h * cam.transform.right; //Horizontal axis to which I want to move with respect to the camera
-		moveDir = (v2 + h2).normalized; //Global position to which I want to move in magnitude 1
-
-		RaycastHit hit;
-		if (Physics.Raycast(transform.position, -Vector3.up, out hit, distToGround + 0.1f))
-		{
-			if (hit.transform.tag == "Slide")
-			{
-				slide = true;
-			}
-			else
-			{
-				slide = false;
-			}
-		}
-	}
-
 	float CalculateJumpVerticalSpeed () {
 		// From the jump height and gravity we deduce the upwards speed 
 		// for the character to reach at the apex.
@@ -165,7 +155,32 @@ public class CharacterControls : MonoBehaviour {
 		transform.position = checkPoint;
 	}
 
-	private IEnumerator Decrease(float value, float duration)
+    private void Update()
+    {
+        playerInput = IA_PlayerControls.playerControls.Player.Move.ReadValue<Vector2>();
+		
+        float h = playerInput.x;
+        float v = playerInput.y;
+
+        Vector3 v2 = v * cam.transform.forward; //Vertical axis to which I want to move with respect to the camera
+        Vector3 h2 = h * cam.transform.right; //Horizontal axis to which I want to move with respect to the camera
+        moveDir = (v2 + h2).normalized; //Global position to which I want to move in magnitude 1
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, -Vector3.up, out hit, distToGround + 0.1f))
+        {
+            if (hit.transform.tag == "Slide")
+            {
+                slide = true;
+            }
+            else
+            {
+                slide = false;
+            }
+        }
+    }
+
+    private IEnumerator Decrease(float value, float duration)
 	{
 		if (isStuned)
 			wasStuned = true;
