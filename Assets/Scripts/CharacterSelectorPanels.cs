@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CharacterSelectorPanels : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDeselectHandler
+public class CharacterSelectorPanels : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDeselectHandler, ISelectHandler
 {
     Animator anim;
     Button selectionButton;
@@ -16,7 +16,6 @@ public class CharacterSelectorPanels : MonoBehaviour, IPointerEnterHandler, IPoi
     {
         anim = GetComponentInChildren<Animator>();
         selectionButton = GetComponent<Button>();
-        selectionButton.onClick.AddListener(Highlight);
         _characterSelector = GetComponentInParent<CharacterSelector>();
         selectionButton.interactable = false;
         _characterSelector.TextDone += Interactable;
@@ -34,7 +33,14 @@ public class CharacterSelectorPanels : MonoBehaviour, IPointerEnterHandler, IPoi
         anim.SetBool("Dance", false);
     }
 
-    void Highlight()
+    //void Highlight()
+    //{
+    //    var color = highlightImage.color;
+    //    color.a = 255f;
+    //    highlightImage.color = color;
+    //}
+
+    public void OnSelect(BaseEventData data)
     {
         var color = highlightImage.color;
         color.a = 255f;

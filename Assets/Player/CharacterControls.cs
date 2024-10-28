@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 [RequireComponent (typeof (Rigidbody))]
 [RequireComponent (typeof (CapsuleCollider))]
@@ -14,9 +16,13 @@ public class CharacterControls : MonoBehaviour {
 	public float maxFallSpeed = 20.0f;
 	public float rotateSpeed = 25f; //Speed the player rotate
 	public GameObject cam;
-	
+	public UnityAction<bool> moving;
+    public UnityAction<Rigidbody> stopped;
+	public UnityAction<float[]> running;
+	public UnityAction<bool> jumping;
+	public UnityAction<float> falling;
 
-	private float distToGround;
+    private float distToGround;
 
 	private bool canMove = true; //If player is not hitted
 	private bool isStuned = false;
@@ -26,6 +32,11 @@ public class CharacterControls : MonoBehaviour {
     private Rigidbody rb;
     private Vector3 moveDir;
 	private Vector2 playerInput = new Vector2(1,2);
+	private float minSpeed;
+	private float maxSpeed;
+	private float runMultiplier = 1.5f;
+	private float[] speedArray;
+	private float fallingVar;
 
     public Vector3 checkPoint;
 	private bool slide = false;
@@ -33,11 +44,22 @@ public class CharacterControls : MonoBehaviour {
     private void OnEnable()
     {
 		IA_PlayerControls.playerControls.Player.Move.Enable();
+		IA_PlayerControls.playerControls.Player.Run.Enable();
+        IA_PlayerControls.playerControls.Player.Jump.Enable();
+        IA_PlayerControls.playerControls.Player.Run.performed += SpeedUp;
+        IA_PlayerControls.playerControls.Player.Run.canceled += SlowDown;
+        IA_PlayerControls.playerControls.Player.Jump.performed += SlowDown;
+        IA_PlayerControls.playerControls.Player.Jump.performed += Jump;
+        minSpeed = speed;
+		maxSpeed = speed * runMultiplier;
+		speedArray = new float[] { speed, minSpeed, maxSpeed };
     }
 
     private void OnDisable()
     {
         IA_PlayerControls.playerControls.Player.Move.Disable();
+        IA_PlayerControls.playerControls.Player.Run.Disable();
+		IA_PlayerControls.playerControls.Player.Jump.Disable();
     }
 
     void  Start (){
@@ -80,8 +102,8 @@ public class CharacterControls : MonoBehaviour {
 				Vector3 targetVelocity = moveDir;
 				targetVelocity *= speed;
 
-				// Apply a force that attempts to reach our target velocity
-				Vector3 velocity = rb.velocity;
+                // Apply a force that attempts to reach our target velocity
+                Vector3 velocity = rb.velocity;
 				if (targetVelocity.magnitude < velocity.magnitude) //If I'm slowing down the character
 				{
 					targetVelocity = velocity;
@@ -101,12 +123,6 @@ public class CharacterControls : MonoBehaviour {
 					rb.AddForce(moveDir * 0.15f, ForceMode.VelocityChange);
 					//Debug.Log(rb.velocity.magnitude);
 				}
-
-				// Jump
-				if (IsGrounded() && Input.GetButton("Jump"))
-				{
-					rb.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
-				}
 			}
 			else
 			{
@@ -125,7 +141,9 @@ public class CharacterControls : MonoBehaviour {
 				{
 					rb.AddForce(moveDir * 0.15f, ForceMode.VelocityChange);
 				}
-			}
+                fallingVar = rb.velocity.y;
+                falling.Invoke(fallingVar);
+            }
 		}
 		else
 		{
@@ -133,7 +151,7 @@ public class CharacterControls : MonoBehaviour {
 		}
 		// We apply gravity manually for more tuning control
 		rb.AddForce(new Vector3(0, -gravity * GetComponent<Rigidbody>().mass, 0));
-	}
+    }
 
 	float CalculateJumpVerticalSpeed () {
 		// From the jump height and gravity we deduce the upwards speed 
@@ -162,6 +180,21 @@ public class CharacterControls : MonoBehaviour {
         float h = playerInput.x;
         float v = playerInput.y;
 
+		if (IsGrounded())
+		{
+			bool isRunning = IA_PlayerControls.playerControls.Player.Run.IsPressed();
+            if (Mathf.Abs(moveDir.x) > 0 && !isRunning || Mathf.Abs(moveDir.x) > 0 && !isRunning)
+            {
+				moving.Invoke(!isRunning);
+            }
+            else if (Mathf.Abs(moveDir.x) == 0 && Mathf.Abs(moveDir.y) == 0)
+            {
+				stopped.Invoke(rb);
+            }
+            else if (Mathf.Abs(moveDir.x) > 0 && isRunning || Mathf.Abs(moveDir.x) > 0 && isRunning)
+				running.Invoke(speedArray);
+        }
+		
         Vector3 v2 = v * cam.transform.forward; //Vertical axis to which I want to move with respect to the camera
         Vector3 h2 = h * cam.transform.right; //Horizontal axis to which I want to move with respect to the camera
         moveDir = (v2 + h2).normalized; //Global position to which I want to move in magnitude 1
@@ -212,4 +245,49 @@ public class CharacterControls : MonoBehaviour {
 			canMove = true;
 		}
 	}
+
+	private void SpeedUp(InputAction.CallbackContext ctx)
+	{
+		if (speed < maxSpeed)
+		{
+            speed *= runMultiplier;
+            speedArray[0] = speed;
+            
+        }
+	}
+
+    private void SlowDown(InputAction.CallbackContext ctx)
+    {
+		if (speed > minSpeed)
+		{
+            speed /= runMultiplier;
+            speedArray[0] = speed;
+            running.Invoke(speedArray);
+        }
+    }
+
+	private void Jump(InputAction.CallbackContext ctx)
+	{
+		bool isGrounded = IsGrounded();
+        if (isGrounded)
+        {
+			Vector3 velocity = rb.velocity;
+            rb.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
+            jumping.Invoke(isGrounded);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == 3)
+		{
+            jumping.Invoke(false);
+			if (IA_PlayerControls.playerControls.Player.Run.IsPressed())
+			{
+                InputAction.CallbackContext ctx = new InputAction.CallbackContext();
+                SpeedUp(ctx);
+            }
+            
+        }
+    }
 }
