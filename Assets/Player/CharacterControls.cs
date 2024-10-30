@@ -21,6 +21,9 @@ public class CharacterControls : MonoBehaviour {
 	public UnityAction<float[]> running;
 	public UnityAction<bool> jumping;
 	public UnityAction<float> falling;
+	public UnityAction<bool> pushed;
+	public UnityAction<bool> sliding;
+	public UnityAction punch;
 
     private float distToGround;
 
@@ -37,6 +40,11 @@ public class CharacterControls : MonoBehaviour {
 	private float runMultiplier = 1.5f;
 	private float[] speedArray;
 	private float fallingVar;
+	private bool rolled = false;
+	private bool pushedVar;
+	[SerializeField] private float punchDelayTimer = 5;
+    private float punchTimer;
+	[SerializeField] private int punchPower;
 
     public Vector3 checkPoint;
 	private bool slide = false;
@@ -46,17 +54,22 @@ public class CharacterControls : MonoBehaviour {
 		IA_PlayerControls.playerControls.Player.Move.Enable();
 		IA_PlayerControls.playerControls.Player.Run.Enable();
         IA_PlayerControls.playerControls.Player.Jump.Enable();
+        IA_PlayerControls.playerControls.Player.Punch.Enable();
         IA_PlayerControls.playerControls.Player.Run.performed += SpeedUp;
         IA_PlayerControls.playerControls.Player.Run.canceled += SlowDown;
         IA_PlayerControls.playerControls.Player.Jump.performed += SlowDown;
         IA_PlayerControls.playerControls.Player.Jump.performed += Jump;
+		IA_PlayerControls.playerControls.Player.Punch.performed += Punch;
+        //IA_PlayerControls.playerControls.Player.Punch.performed
         minSpeed = speed;
 		maxSpeed = speed * runMultiplier;
 		speedArray = new float[] { speed, minSpeed, maxSpeed };
+		punchTimer = punchDelayTimer;
     }
 
     private void OnDisable()
     {
+        IA_PlayerControls.playerControls.Player.Punch.Disable();
         IA_PlayerControls.playerControls.Player.Move.Disable();
         IA_PlayerControls.playerControls.Player.Run.Disable();
 		IA_PlayerControls.playerControls.Player.Jump.Disable();
@@ -84,7 +97,7 @@ public class CharacterControls : MonoBehaviour {
 	{ 
         if (canMove)
 		{
-			if (moveDir.x != 0 || moveDir.z != 0)
+			if (moveDir.x != 0 && !slide || moveDir.z != 0 && !slide)
 			{
 				Vector3 targetDir = moveDir; //Direction of the character
 
@@ -95,7 +108,6 @@ public class CharacterControls : MonoBehaviour {
 				Quaternion targetRotation = Quaternion.Slerp(transform.rotation, tr, Time.deltaTime * rotateSpeed); //Rotate the character little by little
 				transform.rotation = targetRotation;
 			}
-
 			if (IsGrounded())
 			{
 			 // Calculate how fast we should be moving
@@ -180,19 +192,39 @@ public class CharacterControls : MonoBehaviour {
         float h = playerInput.x;
         float v = playerInput.y;
 
+		if (punchTimer < punchDelayTimer)
+		{
+			punchTimer += Time.deltaTime;
+		}
+		else if (punchTimer > punchDelayTimer)
+		{
+			punchTimer = punchDelayTimer;
+		}
+
+		if (pushedVar)
+		{
+			if (rb.velocity.y < 0)
+			{
+				pushedVar = false;
+				pushed.Invoke(pushedVar);
+			}
+		}
+
 		if (IsGrounded())
 		{
 			bool isRunning = IA_PlayerControls.playerControls.Player.Run.IsPressed();
-            if (Mathf.Abs(moveDir.x) > 0 && !isRunning || Mathf.Abs(moveDir.x) > 0 && !isRunning)
+            if (Mathf.Abs(moveDir.x) > 0 && !isRunning && !rolled || Mathf.Abs(moveDir.x) > 0 && !isRunning && !rolled)
             {
 				moving.Invoke(!isRunning);
             }
-            else if (Mathf.Abs(moveDir.x) == 0 && Mathf.Abs(moveDir.y) == 0)
+            else if (Mathf.Abs(moveDir.x) == 0 && Mathf.Abs(moveDir.y) == 0 && !rolled)
             {
 				stopped.Invoke(rb);
             }
             else if (Mathf.Abs(moveDir.x) > 0 && isRunning || Mathf.Abs(moveDir.x) > 0 && isRunning)
-				running.Invoke(speedArray);
+			{
+                running.Invoke(speedArray);
+            }
         }
 		
         Vector3 v2 = v * cam.transform.forward; //Vertical axis to which I want to move with respect to the camera
@@ -200,11 +232,13 @@ public class CharacterControls : MonoBehaviour {
         moveDir = (v2 + h2).normalized; //Global position to which I want to move in magnitude 1
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, -Vector3.up, out hit, distToGround + 0.1f))
+        if (Physics.Raycast(transform.position, -Vector3.up, out hit, distToGround + 0.05f))
         {
             if (hit.transform.tag == "Slide")
             {
                 slide = true;
+				sliding.Invoke(slide);
+
             }
             else
             {
@@ -252,7 +286,6 @@ public class CharacterControls : MonoBehaviour {
 		{
             speed *= runMultiplier;
             speedArray[0] = speed;
-            
         }
 	}
 
@@ -277,6 +310,15 @@ public class CharacterControls : MonoBehaviour {
         }
     }
 
+	private void Punch(InputAction.CallbackContext ctx)
+	{
+		if (punchTimer == punchDelayTimer && IsGrounded())
+		{
+			punch.Invoke();
+			punchTimer = 0;
+		}
+	}
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == 3)
@@ -287,7 +329,52 @@ public class CharacterControls : MonoBehaviour {
                 InputAction.CallbackContext ctx = new InputAction.CallbackContext();
                 SpeedUp(ctx);
             }
-            
         }
+        if (collision.gameObject.layer == 8)
+		{
+            pushedVar = true;
+            pushed.Invoke(pushedVar);
+        }
+		
     }
+
+    
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.layer == 7 && playerInput.x == 0 && playerInput.y == 0)
+		{
+			rolled = true;
+			moving.Invoke(rolled);
+		}
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer == 7)
+        {
+            rolled = false;
+        }
+		if (collision.gameObject.tag == "Slide")
+		{
+			slide = false;
+			sliding.Invoke(slide);
+		}
+    }
+ //   private void OnTriggerEnter(Collider other)
+ //   {
+ //       if (other.gameObject.tag == "PunchZone")
+ //       {
+ //           Vector3 punchForward = other.gameObject.transform.forward;
+ //           rb.AddForce(punchForward * punchPower, ForceMode.Impulse);
+ //           StartCoroutine(Punched());
+ //       }
+ //   }
+
+ //   IEnumerator Punched()
+	//{
+	//	canMove = false;
+	//	yield return new WaitForSeconds(3);
+	//	canMove = true;
+	//}
 }

@@ -6,7 +6,6 @@ public class CharacterAnimations : MonoBehaviour
 {
     Animator anim;
     CharacterControls charControls;
-    [SerializeField] AnimationClip jumpClip;
 
     private void OnEnable()
     {
@@ -17,6 +16,9 @@ public class CharacterAnimations : MonoBehaviour
         charControls.running += PlayerRunning;
         charControls.jumping += PlayerJumping;
         charControls.falling += PlayerFalling;
+        charControls.pushed += PlayerPushed;
+        charControls.sliding += PlayerSliding;
+        charControls.punch += PlayerPunching;
     }
 
     void PlayerMoving(bool moving)
@@ -51,6 +53,7 @@ public class CharacterAnimations : MonoBehaviour
 
     public void PlayerJumped()
     {
+        anim.SetBool("jumping", false);
         anim.SetBool("jumped", true);
     }
 
@@ -64,5 +67,25 @@ public class CharacterAnimations : MonoBehaviour
         {
             anim.SetBool("falling", false);
         }
+    }
+
+    public void PlayerPushed(bool pushed)
+    {
+        anim.SetBool("pushed", pushed);
+    }
+
+    public void PlayerSliding(bool sliding)
+    {
+        anim.SetBool("sliding", sliding);
+    }
+
+    public void PlayerPunching()
+    {
+        anim.SetBool("punching", true);
+    }
+
+    public void PlayerPunched()
+    {
+        anim.SetBool("punching", false);
     }
 }
