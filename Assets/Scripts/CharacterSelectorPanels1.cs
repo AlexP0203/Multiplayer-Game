@@ -11,6 +11,7 @@ public class CharacterSelectorPanels : MonoBehaviour, IPointerEnterHandler, IPoi
     Button selectionButton;
     [SerializeField] Image highlightImage;
     CharacterSelector _characterSelector;
+    [SerializeField] int _selectedCharacterIndex;
 
     private void OnEnable()
     {
@@ -19,6 +20,7 @@ public class CharacterSelectorPanels : MonoBehaviour, IPointerEnterHandler, IPoi
         _characterSelector = GetComponentInParent<CharacterSelector>();
         selectionButton.interactable = false;
         _characterSelector.TextDone += Interactable;
+        anim.SetBool("InMenu", true);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -45,6 +47,7 @@ public class CharacterSelectorPanels : MonoBehaviour, IPointerEnterHandler, IPoi
         var color = highlightImage.color;
         color.a = 255f;
         highlightImage.color = color;
+        SelectedCharacter.character = _selectedCharacterIndex;
     }
 
     public void OnDeselect(BaseEventData data)
