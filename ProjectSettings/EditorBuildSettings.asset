@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/CharacterSelector.unity
     guid: 91b13ff3bafeb8946a7fb71a894656df
   - enabled: 1
-    path: Assets/Scenes/Level01.unity
+    path: Assets/Scenes/Level02.unity
     guid: f9244b100a9fd4446af395fe063762d0
   m_configObjects: {}
