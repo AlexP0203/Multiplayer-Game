@@ -6,18 +6,17 @@ TagManager:
   tags:
   - Slide
   - Wall
-  - PunchZone
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Ground
+  - 
   - Water
   - UI
   - Player
-  - Roller
-  - Bounce
-  - Slide
+  - 
+  - 
+  - 
   - 
   - 
   - 
