@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bounce : MonoBehaviour
 {
-    [SerializeField] CharacterControls characterControls;
+    [SerializeField] CharacterControls1 characterControls;
     public float force = 10f; //Force 10000f
 	public float stunTime = 0.5f;
 	private Vector3 hitDir;
@@ -18,7 +18,7 @@ public class Bounce : MonoBehaviour
 			{
                 characterControls.SetSpeed(15.0f);
                 hitDir = contact.normal;
-				collision.gameObject.GetComponent<CharacterControls>().HitPlayer(-hitDir * force, stunTime);
+				collision.gameObject.GetComponent<CharacterControls1>().HitPlayer(-hitDir * force, stunTime);
 				return;
 			}
 

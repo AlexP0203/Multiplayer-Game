@@ -33,13 +33,14 @@ public class RandomScript : NetworkBehaviour
     {
         NetworkManager.Singleton.StartHost();
         var status = NetworkManager.SceneManager.LoadScene("CharacterSelector", LoadSceneMode.Single);
-        GetLocalIPAddress();
+        SetIpAddress();
     }
 
     public void StartClient()
     {
         ipAddress = ip.text;
-        SetIpAddress();
+        GetLocalIPAddress();
+        Debug.Log(ipAddress);
         NetworkManager.Singleton.StartClient();
     }
 

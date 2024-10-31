@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 using Unity.Netcode;
 using System;
 using Unity.Collections;
-using UnityEditorInternal;
 using TMPro;
 
 [RequireComponent (typeof (Rigidbody))]

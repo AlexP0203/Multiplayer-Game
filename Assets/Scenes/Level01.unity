@@ -11729,6 +11729,7 @@ GameObject:
   - component: {fileID: 351151940}
   - component: {fileID: 351151939}
   - component: {fileID: 351151942}
+  - component: {fileID: 351151943}
   m_Layer: 3
   m_Name: Obstacle (4)
   m_TagString: Untagged
@@ -11845,6 +11846,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &351151943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351151937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc6144eca3cfc11458faeb107bf0f407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &352292774
 GameObject:
   m_ObjectHideFlags: 0
@@ -17473,6 +17486,7 @@ GameObject:
   - component: {fileID: 506084490}
   - component: {fileID: 506084489}
   - component: {fileID: 506084493}
+  - component: {fileID: 506084494}
   m_Layer: 3
   m_Name: Obstacle (2)
   m_TagString: Untagged
@@ -17587,6 +17601,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &506084494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 506084487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc6144eca3cfc11458faeb107bf0f407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &509048824
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21589,7 +21615,10 @@ PrefabInstance:
     - {fileID: 6413673383102434384, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5606471063159250521, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1720558277}
   m_SourcePrefab: {fileID: 100100000, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
 --- !u!1001 &628976826
 PrefabInstance:
@@ -36455,7 +36484,10 @@ PrefabInstance:
     - {fileID: 6413673383102434384, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5606471063159250521, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2111887824}
   m_SourcePrefab: {fileID: 100100000, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
 --- !u!1001 &1113014458
 PrefabInstance:
@@ -41324,6 +41356,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a48714e39c2ecc644b62544a3a53c53a, type: 3}
+--- !u!1 &1230046189 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5606471063159250521, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
+  m_PrefabInstance: {fileID: 625848333}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1230274274 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2644991042193281532, guid: bd117f6e0af0c2942926e61c209b253f, type: 3}
@@ -53215,6 +53252,7 @@ GameObject:
   - component: {fileID: 1533127368}
   - component: {fileID: 1533127367}
   - component: {fileID: 1533127371}
+  - component: {fileID: 1533127372}
   m_Layer: 3
   m_Name: Obstacle (1)
   m_TagString: Untagged
@@ -53329,6 +53367,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1533127372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533127365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc6144eca3cfc11458faeb107bf0f407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1534430071 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2644991042193281532, guid: bd117f6e0af0c2942926e61c209b253f, type: 3}
@@ -57336,7 +57386,10 @@ PrefabInstance:
     - {fileID: 6413673383102434384, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5606471063159250521, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1752582894}
   m_SourcePrefab: {fileID: 100100000, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
 --- !u!4 &1649522749 stripped
 Transform:
@@ -60415,6 +60468,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8962773400622070020, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
   m_PrefabInstance: {fileID: 625848333}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1720558277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230046189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc6144eca3cfc11458faeb107bf0f407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1720925079 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7174246027598809767, guid: a48714e39c2ecc644b62544a3a53c53a, type: 3}
@@ -61080,6 +61145,7 @@ GameObject:
   - component: {fileID: 1735845255}
   - component: {fileID: 1735845254}
   - component: {fileID: 1735845257}
+  - component: {fileID: 1735845258}
   m_Layer: 3
   m_Name: Obstacle (3)
   m_TagString: Untagged
@@ -61196,6 +61262,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1735845258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735845252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc6144eca3cfc11458faeb107bf0f407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1737114866 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7174246027598809767, guid: a48714e39c2ecc644b62544a3a53c53a, type: 3}
@@ -61787,6 +61865,23 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a48714e39c2ecc644b62544a3a53c53a, type: 3}
+--- !u!1 &1752582893 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5606471063159250521, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
+  m_PrefabInstance: {fileID: 1648111439}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1752582894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752582893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc6144eca3cfc11458faeb107bf0f407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1754446611 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2644991042193281532, guid: bd117f6e0af0c2942926e61c209b253f, type: 3}
@@ -73937,6 +74032,23 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7174246027598809767, guid: a48714e39c2ecc644b62544a3a53c53a, type: 3}
   m_PrefabInstance: {fileID: 1031738755}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2111887823 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5606471063159250521, guid: 0789e8f0f3506af42a4cdcfc2624ef07, type: 3}
+  m_PrefabInstance: {fileID: 1112451641}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2111887824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111887823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc6144eca3cfc11458faeb107bf0f407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2113673571
 PrefabInstance:
   m_ObjectHideFlags: 0
