@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -9114194553555167523}
   m_Layer: 0
   m_Name: DoozyPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2008746919
+  GlobalObjectIdHash: 763833295
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -116,6 +116,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6701521006525978793}
     - target: {fileID: 8125632388429620747, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
+      propertyPath: _camera
+      value: 
+      objectReference: {fileID: 9026769448470168648}
+    - target: {fileID: 8125632388429620747, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
+      propertyPath: camRotate
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8125632388429620747, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -152,6 +160,11 @@ MonoBehaviour:
 --- !u!4 &9026769448389945124 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8125632388429620746, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
+  m_PrefabInstance: {fileID: 973214471757496622}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &9026769448470168648 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 8125632388333684070, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
   m_PrefabInstance: {fileID: 973214471757496622}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3952691056574826055

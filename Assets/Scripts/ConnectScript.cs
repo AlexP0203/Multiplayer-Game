@@ -21,11 +21,6 @@ public class RandomScript : NetworkBehaviour
 
     public string playerName;
 
-    public void Hello()
-    {
-        Debug.Log("Hello");
-    }
-
     void Start()
     {
         ipAddress = "0.0.0.0";

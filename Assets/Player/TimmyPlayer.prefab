@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -542413157650508350}
   m_Layer: 0
   m_Name: TimmyPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3020166588
+  GlobalObjectIdHash: 4206375786
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -373,6 +373,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4027042551959701421}
     - target: {fileID: 8125632388429620747, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
+      propertyPath: _camera
+      value: 
+      objectReference: {fileID: 2125406501478958929}
+    - target: {fileID: 8125632388429620747, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
+      propertyPath: camRotate
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8125632388429620747, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -388,6 +396,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1366957509257294415}
   m_SourcePrefab: {fileID: 100100000, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
+--- !u!20 &2125406501478958929 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 8125632388333684070, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
+  m_PrefabInstance: {fileID: 7906911821955351095}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2125406501517255738 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8125632388429620749, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}

@@ -379,14 +379,14 @@ public class CharacterControls1 : NetworkBehaviour
 
         cam.SetActive(true);
 
-        if (!IsServer)
-        {
-            SetNameServerRpc();
-        }
-        if (IsServer)
-        {
-            setName();
-        }
+        //if (!IsServer)
+        //{
+        //    SetNameServerRpc();
+        //}
+        //if (IsServer)
+        //{
+        //    setName();
+        //}
     }
 
     public void SetSpeed(float x)
@@ -406,20 +406,20 @@ public class CharacterControls1 : NetworkBehaviour
         speed = 0;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void SetNameServerRpc()
-    {
-        setName();
-    }
+    //[ServerRpc(RequireOwnership = false)]
+    //public void SetNameServerRpc()
+    //{
+    //    setName();
+    //}
 
-    public void setName()
-    {
-        number = FindObjectOfType<PlayerPlace>().playerNumber.Value + 1;
-        name.text = "Player " + number;
-        gameObject.name = name.text;
-        NetworkObject.name = name.text;
-        FindObjectOfType<PlayerPlace>().ChangePlayerNumber();
-    }
+    //public void setName()
+    //{
+    //    number = FindObjectOfType<PlayerPlace>().playerNumber.Value + 1;
+    //    name.text = "Player " + number;
+    //    gameObject.name = name.text;
+    //    NetworkObject.name = name.text;
+    //    FindObjectOfType<PlayerPlace>().ChangePlayerNumber();
+    //}
 
     public void SetName(string n)
     {

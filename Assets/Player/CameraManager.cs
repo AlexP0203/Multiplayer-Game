@@ -15,7 +15,7 @@ public class CameraManager : NetworkBehaviour
 	public float cameraDist = 3; //Distance to which the camera is located
 
     //public Transform target; //Player the camera follows
-    Transform target;
+    [SerializeField] Transform target;
 
     [HideInInspector]
 	public Transform pivot; //Pivot on which the camera rotates(distance that we want between the camera and our character)
@@ -50,16 +50,7 @@ public class CameraManager : NetworkBehaviour
 
     void Start()
     {
-        input.Player.Camera.performed += ctx =>
-        {
-			camInputX = input.Player.Camera.ReadValue<Vector2>().x;
-			camInputY = input.Player.Camera.ReadValue<Vector2>().y;
-        };
-
-        input.Player.Camera.canceled += ctx => { camInputX = 0.0f; camInputY = 0.0f; };
-
-
-		target = transform.parent;
+    //    input.Player.Camera.canceled += ctx => { camInputX = 0.0f; camInputY = 0.0f; };
     }
 
     public void Init()
@@ -102,7 +93,11 @@ public class CameraManager : NetworkBehaviour
 	 //float h = Input.GetAxis("Mouse X");
 	 //float v = Input.GetAxis("Mouse Y");
 
-		float h = camInputX * camRotate;
+		camInputX = input.Player.Camera.ReadValue<Vector2>().x;
+        camInputY = input.Player.Camera.ReadValue<Vector2>().y;
+
+
+        float h = camInputX * camRotate;
 		float v = camInputY * camRotate;
 
         //float c_h = Input.GetAxis("RightAxis X");
@@ -151,6 +146,7 @@ public class CameraManager : NetworkBehaviour
 
     private void OnEnable()
     {
+        input = IA_PlayerInputControls.input;
         input.Player.Enable();
     }
 
