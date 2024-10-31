@@ -1,12 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.InputSystem;
+using Unity.Netcode;
+using System;
+using Unity.Collections;
+using UnityEditorInternal;
+using TMPro;
 
 [RequireComponent (typeof (Rigidbody))]
 [RequireComponent (typeof (CapsuleCollider))]
 
-public class CharacterControls : MonoBehaviour {
-	
-	public float speed = 10.0f;
+public class CharacterControls : NetworkBehaviour 
+{
+    IA_PlayerInput input;
+    public float speed = 7.0f;
 	public float airVelocity = 8f;
 	public float gravity = 10.0f;
 	public float maxVelocityChange = 10.0f;
@@ -17,7 +24,7 @@ public class CharacterControls : MonoBehaviour {
 	public GameObject cam;
 	private Rigidbody rb;
 
-	private float distToGround;
+    private float distToGround;
 
 	private bool canMove = true; //If player is not hitted
 	private bool isStuned = false;
@@ -25,13 +32,68 @@ public class CharacterControls : MonoBehaviour {
 	private float pushForce;
 	private Vector3 pushDir;
 
+	public TextMeshPro name;
+	private int number;
 	public Vector3 checkPoint;
-	private bool slide = false;
+    public float vForce;
+    public float hForce;
+    private bool slide = false;
+	public int place;
+    bool jumping;
 
-	void  Start (){
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (!IsOwner) 
+		{
+			//SetNameServerRpc();
+            return; 
+		}
+
+        cam.SetActive (true);
+
+        if (!IsServer)
+        {
+            Debug.Log("1");
+            SetNameServerRpc();
+        }
+        if (IsServer)
+        {
+            Debug.Log("2");
+            setName();
+        }
+    }
+
+    private void OnEnable()
+    {
+        input.Enable();
+    }
+
+    private void OnDisable()
+    {
+        input.Disable();
+    }
+
+    void  Start (){
 		// get the distance to ground
 		distToGround = GetComponent<Collider>().bounds.extents.y;
-	}
+
+        input.Player.Move.performed += ctx =>
+        {
+            vForce = input.Player.Move.ReadValue<Vector2>().x * speed;
+            hForce = input.Player.Move.ReadValue<Vector2>().y * speed;
+        };
+
+        input.Player.Move.canceled += ctx => { hForce = 0.0f; vForce = 0.0f; };
+
+        input.Player.Jump.performed += ctx =>
+        {
+			jumping = true;
+        };
+
+        input.Player.Jump.canceled += ctx => { jumping = false; };
+    }
 	
 	bool IsGrounded (){
 		return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
@@ -41,8 +103,9 @@ public class CharacterControls : MonoBehaviour {
 		rb = GetComponent<Rigidbody>();
 		rb.freezeRotation = true;
 		rb.useGravity = false;
+        input = new IA_PlayerInput();
 
-		checkPoint = transform.position;
+        checkPoint = transform.position;
 		Cursor.visible = false;
 	}
 	
@@ -90,7 +153,7 @@ public class CharacterControls : MonoBehaviour {
 				}
 
 				// Jump
-				if (IsGrounded() && Input.GetButton("Jump"))
+				if (IsGrounded() && jumping)
 				{
 					rb.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
 				}
@@ -124,11 +187,11 @@ public class CharacterControls : MonoBehaviour {
 
 	private void Update()
 	{
-		float h = Input.GetAxis("Horizontal");
-		float v = Input.GetAxis("Vertical");
+		//float h = Input.GetAxis("Horizontal");
+		//float v = Input.GetAxis("Vertical");
 
-		Vector3 v2 = v * cam.transform.forward; //Vertical axis to which I want to move with respect to the camera
-		Vector3 h2 = h * cam.transform.right; //Horizontal axis to which I want to move with respect to the camera
+		Vector3 v2 = hForce * cam.transform.forward; //Vertical axis to which I want to move with respect to the camera
+		Vector3 h2 = vForce * cam.transform.right; //Horizontal axis to which I want to move with respect to the camera
 		moveDir = (v2 + h2).normalized; //Global position to which I want to move in magnitude 1
 
 		RaycastHit hit;
@@ -143,6 +206,12 @@ public class CharacterControls : MonoBehaviour {
 				slide = false;
 			}
 		}
+
+		if(speed > 15.0f)
+		{
+            StartCoroutine(ResetSpeed());
+        }
+
 	}
 
 	float CalculateJumpVerticalSpeed () {
@@ -197,4 +266,39 @@ public class CharacterControls : MonoBehaviour {
 			canMove = true;
 		}
 	}
+
+	public void SetSpeed(float x)
+	{
+		speed = x;
+    }
+
+	IEnumerator ResetSpeed()
+	{
+		WaitForSeconds wait = new WaitForSeconds(3.0f);
+		yield return wait;
+		speed = 15.0f;
+	}
+
+	public void stopPlayer()
+	{
+		speed = 0;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetNameServerRpc()
+    {
+        Debug.Log("3");
+        setName();
+    }
+
+    public void setName()
+    {
+        Debug.Log("4");
+        number = FindObjectOfType<PlayerPlace>().playerNumber.Value + 1;
+        name.text = "Player " + number;
+        gameObject.name = name.text;
+        NetworkObject.name = name.text;
+        FindObjectOfType<PlayerPlace>().ChangePlayerNumber();
+    }
+
 }

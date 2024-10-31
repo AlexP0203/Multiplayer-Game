@@ -1,17 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class CameraManager : MonoBehaviour {
+
+public class CameraManager : NetworkBehaviour 
+{
 
 	public float followSpeed = 3; //Speed ​​at which the camera follows us
 	public float mouseSpeed = 2; //Speed ​​at which we rotate the camera with the mouse
 	//public float controllerSpeed = 5; //Speed ​​at which we rotate the camera with the joystick
 	public float cameraDist = 3; //Distance to which the camera is located
 
-	public Transform target; //Player the camera follows
+    //public Transform target; //Player the camera follows
+    Transform target;
 
-	[HideInInspector]
+    [HideInInspector]
 	public Transform pivot; //Pivot on which the camera rotates(distance that we want between the camera and our character)
 	[HideInInspector]
 	public Transform camTrans; //Camera position
@@ -26,8 +32,37 @@ public class CameraManager : MonoBehaviour {
 	float smoothYvelocity;
 	public float lookAngle; //Angle the camera has on the Y axis
 	public float tiltAngle; //Angle the camera has up / down
+	public float camInputX;
+    public float camInputY;
+	public float camRotate;
+	public Camera _camera;
+    IA_PlayerInput input;
 
-	public void Init()
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (!IsOwner)
+        {
+            return;
+        }
+        _camera.enabled = true;
+    }
+
+    void Start()
+    {
+        input.Player.Camera.performed += ctx =>
+        {
+			camInputX = input.Player.Camera.ReadValue<Vector2>().x;
+			camInputY = input.Player.Camera.ReadValue<Vector2>().y;
+        };
+
+        input.Player.Camera.canceled += ctx => { camInputX = 0.0f; camInputY = 0.0f; };
+
+
+		target = transform.parent;
+    }
+
+    public void Init()
 	{
 		camTrans = Camera.main.transform;
 		pivot = camTrans.parent;
@@ -64,13 +99,16 @@ public class CameraManager : MonoBehaviour {
 
 	private void FixedUpdate()
 	{//Function that correctly rotates the camera based on the joystick / mouse and follows the player (the delta time is sent to be independent of the fps)
-		float h = Input.GetAxis("Mouse X");
-		float v = Input.GetAxis("Mouse Y");
+	 //float h = Input.GetAxis("Mouse X");
+	 //float v = Input.GetAxis("Mouse Y");
 
-		//float c_h = Input.GetAxis("RightAxis X");
-		//float c_v = Input.GetAxis("RightAxis Y");
+		float h = camInputX * camRotate;
+		float v = camInputY * camRotate;
 
-		float targetSpeed = mouseSpeed;
+        //float c_h = Input.GetAxis("RightAxis X");
+        //float c_v = Input.GetAxis("RightAxis Y");
+
+        float targetSpeed = mouseSpeed;
 
 		/*if (c_h != 0 || c_v != 0)
 		{ //Overwrites if i use joystick
@@ -108,6 +146,17 @@ public class CameraManager : MonoBehaviour {
 	{
 		singleton = this; //Self-assigns
 		Init();
-	}
+        input = new IA_PlayerInput();
+    }
+
+    private void OnEnable()
+    {
+        input.Player.Enable();
+    }
+
+    private void OnDisable()
+    {
+        input.Disable();
+    }
 
 }
