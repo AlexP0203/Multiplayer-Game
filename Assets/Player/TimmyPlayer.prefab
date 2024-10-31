@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9004379164986697132}
   - component: {fileID: -542413157650508350}
+  - component: {fileID: -620727073132376051}
   m_Layer: 0
   m_Name: TimmyPlayer
   m_TagString: Player
@@ -55,6 +56,37 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &-620727073132376051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4578738165035864433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aebb408fc89fbaa4eb70f794dbd8f100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1001 &1332781236348470184
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -320,6 +352,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9004379164986697132}
     m_Modifications:
+    - target: {fileID: -5816418147086381743, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1378961374
+      objectReference: {fileID: 0}
     - target: {fileID: 8125632388333684070, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
       propertyPath: near clip plane
       value: 0.01

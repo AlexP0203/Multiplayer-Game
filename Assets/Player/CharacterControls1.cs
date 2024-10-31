@@ -57,17 +57,20 @@ public class CharacterControls1 : NetworkBehaviour
     public Vector3 checkPoint;
 	private bool slide = false;
 
+	IA_Player playerControls;
+
     private void OnEnable()
     {
-		IA_PlayerControls.playerControls.Player.Move.Enable();
-		IA_PlayerControls.playerControls.Player.Run.Enable();
-        IA_PlayerControls.playerControls.Player.Jump.Enable();
-        IA_PlayerControls.playerControls.Player.Punch.Enable();
-        IA_PlayerControls.playerControls.Player.Run.performed += SpeedUp;
-        IA_PlayerControls.playerControls.Player.Run.canceled += SlowDown;
-        IA_PlayerControls.playerControls.Player.Jump.performed += SlowDown;
-        IA_PlayerControls.playerControls.Player.Jump.performed += Jump;
-		IA_PlayerControls.playerControls.Player.Punch.performed += Punch;
+		playerControls = IA_PlayerControls.playerControls;
+		playerControls.Player.Move.Enable();
+		playerControls.Player.Run.Enable();
+        playerControls.Player.Jump.Enable();
+        playerControls.Player.Punch.Enable();
+        playerControls.Player.Run.performed += SpeedUp;
+        playerControls.Player.Run.canceled += SlowDown;
+        playerControls.Player.Jump.performed += SlowDown;
+        playerControls.Player.Jump.performed += Jump;
+		playerControls.Player.Punch.performed += Punch;
         //IA_PlayerControls.playerControls.Player.Punch.performed
         minSpeed = speed;
 		maxSpeed = speed * runMultiplier;
@@ -77,10 +80,10 @@ public class CharacterControls1 : NetworkBehaviour
 
     private void OnDisable()
     {
-        IA_PlayerControls.playerControls.Player.Punch.Disable();
-        IA_PlayerControls.playerControls.Player.Move.Disable();
-        IA_PlayerControls.playerControls.Player.Run.Disable();
-		IA_PlayerControls.playerControls.Player.Jump.Disable();
+        playerControls.Player.Punch.Disable();
+        playerControls.Player.Move.Disable();
+        playerControls.Player.Run.Disable();
+		playerControls.Player.Jump.Disable();
     }
 
     void  Start (){
@@ -102,7 +105,9 @@ public class CharacterControls1 : NetworkBehaviour
 	}
 	
 	void FixedUpdate ()
-	{ 
+	{
+        if (!IsOwner) return;
+
         if (canMove)
 		{
 			if (moveDir.x != 0 && !slide || moveDir.z != 0 && !slide)
@@ -195,50 +200,52 @@ public class CharacterControls1 : NetworkBehaviour
 
     private void Update()
     {
-        playerInput = IA_PlayerControls.playerControls.Player.Move.ReadValue<Vector2>();
-		
-        float h = playerInput.x;
-        float v = playerInput.y;
+		{
+			playerInput = playerControls.Player.Move.ReadValue<Vector2>();
 
-		if (punchTimer < punchDelayTimer)
-		{
-			punchTimer += Time.deltaTime;
-		}
-		else if (punchTimer > punchDelayTimer)
-		{
-			punchTimer = punchDelayTimer;
-		}
+			float h = playerInput.x;
+			float v = playerInput.y;
 
-		if (pushedVar)
-		{
-			if (rb.velocity.y < 0)
+			if (punchTimer < punchDelayTimer)
 			{
-				pushedVar = false;
-				pushed.Invoke(pushedVar);
+				punchTimer += Time.deltaTime;
 			}
-		}
-
-		if (IsGrounded())
-		{
-			bool isRunning = IA_PlayerControls.playerControls.Player.Run.IsPressed();
-            if (Mathf.Abs(moveDir.x) > 0 && !isRunning && !rolled || Mathf.Abs(moveDir.x) > 0 && !isRunning && !rolled)
-            {
-				moving.Invoke(!isRunning);
-            }
-            else if (Mathf.Abs(moveDir.x) == 0 && Mathf.Abs(moveDir.y) == 0 && !rolled)
-            {
-				stopped.Invoke(rb);
-            }
-            else if (Mathf.Abs(moveDir.x) > 0 && isRunning || Mathf.Abs(moveDir.x) > 0 && isRunning)
+			else if (punchTimer > punchDelayTimer)
 			{
-                running.Invoke(speedArray);
-            }
-        }
-		
-        Vector3 v2 = v * cam.transform.forward; //Vertical axis to which I want to move with respect to the camera
-        Vector3 h2 = h * cam.transform.right; //Horizontal axis to which I want to move with respect to the camera
-        moveDir = (v2 + h2).normalized; //Global position to which I want to move in magnitude 1
+				punchTimer = punchDelayTimer;
+			}
 
+			if (pushedVar)
+			{
+				if (rb.velocity.y < 0)
+				{
+					pushedVar = false;
+					pushed.Invoke(pushedVar);
+				}
+			}
+
+			if (IsGrounded())
+			{
+				bool isRunning = playerControls.Player.Run.IsPressed();
+				if (Mathf.Abs(moveDir.x) > 0 && !isRunning && !rolled || Mathf.Abs(moveDir.x) > 0 && !isRunning && !rolled)
+				{
+					moving.Invoke(!isRunning);
+				}
+				else if (Mathf.Abs(moveDir.x) == 0 && Mathf.Abs(moveDir.y) == 0 && !rolled)
+				{
+					stopped.Invoke(rb);
+				}
+				else if (Mathf.Abs(moveDir.x) > 0 && isRunning || Mathf.Abs(moveDir.x) > 0 && isRunning)
+				{
+					running.Invoke(speedArray);
+				}
+			}
+
+
+			Vector3 v2 = v * cam.transform.forward; //Vertical axis to which I want to move with respect to the camera
+			Vector3 h2 = h * cam.transform.right; //Horizontal axis to which I want to move with respect to the camera
+			moveDir = (v2 + h2).normalized; //Global position to which I want to move in magnitude 1
+		}
         RaycastHit hit;
         if (Physics.Raycast(transform.position, -Vector3.up, out hit, distToGround + 0.05f))
         {
@@ -290,7 +297,8 @@ public class CharacterControls1 : NetworkBehaviour
 
 	private void SpeedUp(InputAction.CallbackContext ctx)
 	{
-		if (speed < maxSpeed)
+
+        if (speed < maxSpeed)
 		{
             speed *= runMultiplier;
             speedArray[0] = speed;
@@ -298,8 +306,9 @@ public class CharacterControls1 : NetworkBehaviour
 	}
 
     private void SlowDown(InputAction.CallbackContext ctx)
-    {
-		if (speed > minSpeed)
+	{ 
+
+        if (speed > minSpeed)
 		{
             speed /= runMultiplier;
             speedArray[0] = speed;
@@ -309,7 +318,9 @@ public class CharacterControls1 : NetworkBehaviour
 
 	private void Jump(InputAction.CallbackContext ctx)
 	{
-		bool isGrounded = IsGrounded();
+
+
+        bool isGrounded = IsGrounded();
         if (isGrounded)
         {
 			Vector3 velocity = rb.velocity;
@@ -320,7 +331,9 @@ public class CharacterControls1 : NetworkBehaviour
 
 	private void Punch(InputAction.CallbackContext ctx)
 	{
-		if (punchTimer == punchDelayTimer && IsGrounded())
+
+
+        if (punchTimer == punchDelayTimer && IsGrounded())
 		{
 			punch.Invoke();
 			punchTimer = 0;
@@ -332,7 +345,7 @@ public class CharacterControls1 : NetworkBehaviour
         if (collision.gameObject.layer == 3)
 		{
             jumping.Invoke(false);
-			if (IA_PlayerControls.playerControls.Player.Run.IsPressed())
+			if (playerControls.Player.Run.IsPressed())
 			{
                 InputAction.CallbackContext ctx = new InputAction.CallbackContext();
                 SpeedUp(ctx);

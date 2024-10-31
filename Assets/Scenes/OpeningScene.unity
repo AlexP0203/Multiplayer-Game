@@ -256,7 +256,7 @@ MonoBehaviour:
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
     Address: 127.0.0.1
-    Port: 7777
+    Port: 7778
     ServerListenAddress: 127.0.0.1
   DebugSimulator:
     PacketDelayMS: 0
@@ -632,7 +632,7 @@ MonoBehaviour:
   ipAddressText: {fileID: 1614896738}
   ip: {fileID: 144324345}
   ipAddress: 
-  transport: {fileID: 0}
+  transport: {fileID: 74089364}
   playerName: 
 --- !u!1 &707073546
 GameObject:

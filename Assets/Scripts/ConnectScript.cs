@@ -33,14 +33,13 @@ public class RandomScript : NetworkBehaviour
     {
         NetworkManager.Singleton.StartHost();
         var status = NetworkManager.SceneManager.LoadScene("CharacterSelector", LoadSceneMode.Single);
-        SetIpAddress();
+        GetLocalIPAddress();
     }
 
     public void StartClient()
     {
         ipAddress = ip.text;
-        GetLocalIPAddress();
-        Debug.Log(ipAddress);
+        SetIpAddress();
         NetworkManager.Singleton.StartClient();
     }
 
@@ -61,8 +60,11 @@ public class RandomScript : NetworkBehaviour
 
     public void SetIpAddress()
     {
-        transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        transport.ConnectionData.Address = ipAddress;
+        transport.SetConnectionData(
+        "127.0.0.1",  // The IP address is a string
+        (ushort)7778, // The port number is an unsigned short
+        "0.0.0.0" // The server listen address is a string.
+);
     }
 
     private void assignPlayerController()

@@ -90,10 +90,10 @@ public class CameraManager : NetworkBehaviour
 
 	private void FixedUpdate()
 	{//Function that correctly rotates the camera based on the joystick / mouse and follows the player (the delta time is sent to be independent of the fps)
-	 //float h = Input.GetAxis("Mouse X");
-	 //float v = Input.GetAxis("Mouse Y");
+     //float h = Input.GetAxis("Mouse X");
+     //float v = Input.GetAxis("Mouse Y");
 
-		camInputX = input.Player.Camera.ReadValue<Vector2>().x;
+        camInputX = input.Player.Camera.ReadValue<Vector2>().x;
         camInputY = input.Player.Camera.ReadValue<Vector2>().y;
 
 
@@ -120,7 +120,7 @@ public class CameraManager : NetworkBehaviour
 	{
 		//Here begins the code that is responsible for bringing the camera closer by detecting wall
 		float dist = cameraDist + 1.0f; // distance to the camera + 1.0 so the camera doesnt jump 1 unit in if it hits someting far out
-		Ray ray = new Ray(camTrans.parent.position, camTrans.position - camTrans.parent.position);// get a ray in space from the target to the camera.
+		Ray ray = new Ray(camTrans.parent.position, camTrans.position - camTrans.parent.position);// get a ray in space from the target to the camera.d
 		RaycastHit hit;
 		// read from the taret to the targetPosition;
 		if (Physics.Raycast(ray, out hit, dist))
@@ -146,7 +146,7 @@ public class CameraManager : NetworkBehaviour
 
     private void OnEnable()
     {
-        input = IA_PlayerInputControls.input;
+        
         input.Player.Enable();
     }
 
