@@ -116,6 +116,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7860073675716273828}
     - target: {fileID: 8125632388429620747, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
+      propertyPath: _camera
+      value: 
+      objectReference: {fileID: 8190110418361308907}
+    - target: {fileID: 8125632388429620747, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -154,6 +158,16 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8125632388429620746, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
   m_PrefabInstance: {fileID: 102762089209074573}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8190110418361308902 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8125632388333684075, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
+  m_PrefabInstance: {fileID: 102762089209074573}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &8190110418361308907 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 8125632388333684070, guid: 74fe7eed3ad8ec84bb8770355f363fda, type: 3}
+  m_PrefabInstance: {fileID: 102762089209074573}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5226576872864490145
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -165,7 +179,7 @@ PrefabInstance:
     - target: {fileID: 885459933283647452, guid: edb517042df3565409ccc5a56b9e8aff, type: 3}
       propertyPath: cam
       value: 
-      objectReference: {fileID: 8190110418273744256}
+      objectReference: {fileID: 8190110418361308902}
     - target: {fileID: 2710059374464435205, guid: edb517042df3565409ccc5a56b9e8aff, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.7

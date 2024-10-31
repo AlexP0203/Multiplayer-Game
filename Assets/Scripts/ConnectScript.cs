@@ -4,10 +4,11 @@ using Unity.Netcode.Transports.UTP;
 using TMPro;
 using System.Net;
 using System.Net.Sockets;
+using UnityEngine.SceneManagement;
 
-public class RandomScript : MonoBehaviour
+public class RandomScript : NetworkBehaviour
 {
-    private CharacterControls pc;
+    private CharacterControls1 pc;
     //private bool pcAssigned;
 
     [SerializeField] TextMeshProUGUI ipAddressText;
@@ -16,7 +17,14 @@ public class RandomScript : MonoBehaviour
     [SerializeField] string ipAddress;
     [SerializeField] UnityTransport transport;
 
+
+
     public string playerName;
+
+    public void Hello()
+    {
+        Debug.Log("Hello");
+    }
 
     void Start()
     {
@@ -29,6 +37,7 @@ public class RandomScript : MonoBehaviour
     public void StartHost()
     {
         NetworkManager.Singleton.StartHost();
+        var status = NetworkManager.SceneManager.LoadScene("CharacterSelector", LoadSceneMode.Single);
         GetLocalIPAddress();
     }
 
@@ -64,9 +73,9 @@ public class RandomScript : MonoBehaviour
     {
         if (pc == null)
         {
-            pc = FindObjectOfType<CharacterControls>();
+            pc = FindObjectOfType<CharacterControls1>();
         }
-        else if (pc == FindObjectOfType<CharacterControls>())
+        else if (pc == FindObjectOfType<CharacterControls1>())
         {
             //pcAssigned = true;
             CancelInvoke();

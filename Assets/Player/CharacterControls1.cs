@@ -346,8 +346,6 @@ public class CharacterControls1 : NetworkBehaviour
 		
     }
 
-    
-
     private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.layer == 7 && playerInput.x == 0 && playerInput.y == 0)
