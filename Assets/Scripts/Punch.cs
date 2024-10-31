@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Punch : MonoBehaviour
 {
-    CharacterControls characterControls;
+    CharacterControls1 characterControls;
     BoxCollider boxCollider;
     [SerializeField] AnimationClip clip;
     AnimationEvent aniEvent = new AnimationEvent();
     private void OnEnable()
     {
-        characterControls = GetComponentInParent<CharacterControls>();
+        characterControls = GetComponentInParent<CharacterControls1>();
         boxCollider = GetComponentInChildren<BoxCollider>();
         characterControls.punch += PunchHitBox;
         aniEvent.time = 1.7f;

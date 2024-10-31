@@ -5,12 +5,12 @@ using UnityEngine;
 public class CharacterAnimations : MonoBehaviour
 {
     Animator anim;
-    CharacterControls charControls;
+    CharacterControls1 charControls;
 
     private void OnEnable()
     {
         anim = GetComponent<Animator>();
-        CharacterControls charControls = GetComponentInParent<CharacterControls>();
+        CharacterControls1 charControls = GetComponentInParent<CharacterControls1>();
         charControls.moving += PlayerMoving;
         charControls.stopped += PlayerStopped;
         charControls.running += PlayerRunning;

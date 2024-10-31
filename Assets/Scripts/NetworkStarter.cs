@@ -6,15 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class NetworkStarter : NetworkBehaviour
 {
-    private void Start()
-    {
-        StartHost();
-    }
+    //private void Start()
+    //{
+    //    StartHost();
+    //}
 
-    public void StartHost()
-    {
-        NetworkManager.Singleton.StartHost();
-    }
+    //public void StartHost()
+    //{
+    //    NetworkManager.Singleton.StartHost();
+    //}
 
 
 }

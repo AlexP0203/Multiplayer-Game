@@ -2,11 +2,17 @@
 using System.Collections;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using System.Globalization;
+using System;
+using Unity.Netcode;
+using TMPro;
+using Unity.VisualScripting;
 
 [RequireComponent (typeof (Rigidbody))]
 [RequireComponent (typeof (CapsuleCollider))]
 
-public class CharacterControls : MonoBehaviour {
+public class CharacterControls1 : NetworkBehaviour
+{
 	
 	public float speed = 10.0f;
 	public float airVelocity = 8f;
@@ -24,6 +30,7 @@ public class CharacterControls : MonoBehaviour {
 	public UnityAction<bool> pushed;
 	public UnityAction<bool> sliding;
 	public UnityAction punch;
+    public TextMeshPro name;
 
     private float distToGround;
 
@@ -45,6 +52,7 @@ public class CharacterControls : MonoBehaviour {
 	[SerializeField] private float punchDelayTimer = 5;
     private float punchTimer;
 	[SerializeField] private int punchPower;
+	private int number;
 
     public Vector3 checkPoint;
 	private bool slide = false;
@@ -361,20 +369,63 @@ public class CharacterControls : MonoBehaviour {
 			sliding.Invoke(slide);
 		}
     }
- //   private void OnTriggerEnter(Collider other)
- //   {
- //       if (other.gameObject.tag == "PunchZone")
- //       {
- //           Vector3 punchForward = other.gameObject.transform.forward;
- //           rb.AddForce(punchForward * punchPower, ForceMode.Impulse);
- //           StartCoroutine(Punched());
- //       }
- //   }
 
- //   IEnumerator Punched()
-	//{
-	//	canMove = false;
-	//	yield return new WaitForSeconds(3);
-	//	canMove = true;
-	//}
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (!IsOwner)
+        {
+            //SetNameServerRpc();
+            return;
+        }
+
+        cam.SetActive(true);
+
+        if (!IsServer)
+        {
+            SetNameServerRpc();
+        }
+        if (IsServer)
+        {
+            setName();
+        }
+    }
+
+    public void SetSpeed(float x)
+    {
+        speed = x;
+    }
+
+    IEnumerator ResetSpeed()
+    {
+        WaitForSeconds wait = new WaitForSeconds(3.0f);
+        yield return wait;
+        speed = 15.0f;
+    }
+
+    public void stopPlayer()
+    {
+        speed = 0;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetNameServerRpc()
+    {
+        setName();
+    }
+
+    public void setName()
+    {
+        number = FindObjectOfType<PlayerPlace>().playerNumber.Value + 1;
+        name.text = "Player " + number;
+        gameObject.name = name.text;
+        NetworkObject.name = name.text;
+        FindObjectOfType<PlayerPlace>().ChangePlayerNumber();
+    }
+
+    public void SetName(string n)
+    {
+        name.text = n;
+    }
+
 }
