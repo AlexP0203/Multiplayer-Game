@@ -7,6 +7,8 @@ using Unity.Netcode;
 
 public class PlayerPlace : NetworkBehaviour
 {
+
+
     public NetworkVariable<int> Place = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> playerNumber = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
@@ -44,6 +46,8 @@ public class PlayerPlace : NetworkBehaviour
                 SendMessageToClients(n + " Last Place");
                 break;
         }
+
+
     }
 
     [ClientRpc]
@@ -61,5 +65,4 @@ public class PlayerPlace : NetworkBehaviour
             PrintToAllClientsClientRpc(message);
         }
     }
-
 }

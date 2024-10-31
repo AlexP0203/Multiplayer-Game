@@ -12,11 +12,11 @@ public class FinishLine : MonoBehaviour
 
         if (col.gameObject.tag == "Player")
         {
-            //playerName = col.gameObject.name;
             FindObjectOfType<PlayerPlace>().ChangePlace();
             col.gameObject.GetComponent<CharacterControls>().stopPlayer();
-            //col.gameObject.GetComponent<CharacterControls>().displayPlayerPlace(FindObjectOfType<PlayerPlace>().Place.Value);
             FindObjectOfType<PlayerPlace>().displayPlayerPlaceServerRpc(col.gameObject.name);
         }
     }
+
+    
 }

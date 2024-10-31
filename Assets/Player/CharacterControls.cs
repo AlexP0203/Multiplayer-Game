@@ -55,12 +55,10 @@ public class CharacterControls : NetworkBehaviour
 
         if (!IsServer)
         {
-            Debug.Log("1");
             SetNameServerRpc();
         }
         if (IsServer)
         {
-            Debug.Log("2");
             setName();
         }
     }
@@ -287,18 +285,21 @@ public class CharacterControls : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SetNameServerRpc()
     {
-        Debug.Log("3");
         setName();
     }
 
     public void setName()
     {
-        Debug.Log("4");
         number = FindObjectOfType<PlayerPlace>().playerNumber.Value + 1;
         name.text = "Player " + number;
         gameObject.name = name.text;
         NetworkObject.name = name.text;
         FindObjectOfType<PlayerPlace>().ChangePlayerNumber();
+    }
+
+	public void SetName(string n)
+	{
+		name.text = n;
     }
 
 }
